@@ -31,6 +31,8 @@ app.get("/sparying-systems", (req, res) => {
   let companyName = "01. Spraying Systems";
   let files = fs.readdirSync(dir + companyName);
 
+  let pqrInfoKeySet = new Set();
+
   for (let i = 0; i < files.length; i++) {
     let file = files[i];
 
@@ -65,7 +67,14 @@ app.get("/sparying-systems", (req, res) => {
         // welding_type
         let weldingTypeArr = new Array(3);
         let weldingTypes = pqr_info.type.split("+");
-        console.log("welding_type: " + weldingTypes);
+
+        Object.keys(pqr_info).forEach((element, index) => {
+          pqrInfoKeySet.add(element);
+        });
+
+        // console.log(" pqr_info.keys" + Object.keys(pqr_info));
+        if (!pqr_info.no_value) {
+        }
 
         for (let i = 0; i < weldingTypes.length; i++) {
           weldingTypeArr[i] = weldingTypes[i];
@@ -74,29 +83,29 @@ app.get("/sparying-systems", (req, res) => {
         let sql =
           "INSERT INTO pqr_info (company, pqr_no, pqr_date, wps_no, wps_rev_no, welding_process1, welding_process2, welding_process3, welding_type1, welding_type2, welding_type3, origin_file_name, other) values ( ?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-        connection.query(
-          sql,
-          [
-            pqr_info.company,
-            pqr_info.procedure_qualification_record_no,
-            mydate,
-            pqr_info.welding_procedure_specification_no,
-            0,
-            pqr_info.welding_process1,
-            pqr_info.welding_process2,
-            pqr_info.welding_process3,
-            weldingTypeArr[0],
-            weldingTypeArr[1],
-            weldingTypeArr[2],
-            pqr_info.original_file_name,
-            null,
-          ],
-          function (error, results, fields) {
-            if (error) {
-              throw error;
-            }
-          }
-        );
+        // connection.query(
+        //   sql,
+        //   [
+        //     pqr_info.company,
+        //     pqr_info.procedure_qualification_record_no,
+        //     mydate,
+        //     pqr_info.welding_procedure_specification_no,
+        //     0,
+        //     pqr_info.welding_process1,
+        //     pqr_info.welding_process2,
+        //     pqr_info.welding_process3,
+        //     weldingTypeArr[0],
+        //     weldingTypeArr[1],
+        //     weldingTypeArr[2],
+        //     pqr_info.original_file_name,
+        //     null,
+        //   ],
+        //   function (error, results, fields) {
+        //     if (error) {
+        //       throw error;
+        //     }
+        //   }
+        // );
       });
     }
   }
